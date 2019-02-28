@@ -92,6 +92,9 @@ namespace coding_bots
 
         public bool PrepareData(List<string> lines)
         {
+            Photo.count = 0;
+            Photo.tagCount = 0;
+            Dictionary<string, int> TagsIds = new Dictionary<string, int>();
             if (lines == null)
             {
                 return false;
