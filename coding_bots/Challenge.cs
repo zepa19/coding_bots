@@ -11,6 +11,33 @@ namespace coding_bots
         List<Photo> photosH = new List<Photo>();
         List<Photo> photosV = new List<Photo>();
         static Dictionary<string, int> TagsIds = new Dictionary<string, int>();
+        List<Slide> slides = new List<Slide>();
+
+        class Slide
+        {
+            public bool isHorizontal;
+            public string IDs;
+            public Photo photo1;
+            public Photo photo2;
+            public List<int> TAGS;
+
+            public Slide(Photo p)
+            {
+                isHorizontal = true;
+                IDs = p.ID.ToString();
+            }
+
+            public Slide(Photo p1, Photo p2)
+            {
+                isHorizontal = false;
+                IDs = $"{p1.ID} {p2.ID}";
+            }
+
+            public void SetTags(List<int> tags)
+            {
+                this.TAGS = tags;
+            }
+        }
        
         class Photo
         {
