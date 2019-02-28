@@ -100,7 +100,7 @@ namespace coding_bots
                 return false;
             }
 
-            for (int i = 1; i < lines.Count() - 1; i++)
+            for (int i = 1; i < lines.Count(); i++)
             {
                 Photo newPhoto = new Photo(lines[i]);
                 if (newPhoto.isHorizontal)
