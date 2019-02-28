@@ -20,7 +20,7 @@ namespace coding_bots
         static readonly string archiveFileDirectory = "archive";
 
         // Nazwa pliku wejściowego. Podawana po uruchomieniu programu.
-        static string _fileName { get; set; }
+        static List<string> _fileNames { get; set; }
         static List<string> _fileContent { get; set; }
 
         static void Main(string[] args)
@@ -32,46 +32,49 @@ namespace coding_bots
                 return;
             }
             
-            // Odczytujemy dane z pliku do jakiś zmiennych globalnych czy czegoś tam. Jeśli true to wszystko jest OK.
-            if (!ReadInputData())
+            foreach(var fileName in _fileNames)
             {
-                Console.ReadKey();
-                return;
-            }
-
-            // Klasa Challenge to tam będziemy implementować algorytm itp.
-            Challenge task = new Challenge();
-
-            // Przekazujemy odczytane dane do tej klasy Challenge. Jeśli true to wszystko jest OK.
-            if(task.PrepareData(_fileContent))
-            {
-                try
+                // Odczytujemy dane z pliku do jakiś zmiennych globalnych czy czegoś tam. Jeśli true to wszystko jest OK.
+                if (!ReadInputData(fileName))
                 {
-                    // Uruchamiamy algorytm. Wszystkie wyjątki zostaną tutaj obsłużone, więc tam nie trzeba się tym martwić.
-                    Console.WriteLine("\nSolving challenge...");
-                    var watch = Stopwatch.StartNew();
-                    task.Solve();
-                    watch.Stop();
-                    Console.WriteLine($"Challenge solved in {GetSolvingTime(watch.ElapsedMilliseconds)}\n");
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine($"Something went wrong: {e.Message}");
                     Console.ReadKey();
                     return;
                 }
+
+                // Klasa Challenge to tam będziemy implementować algorytm itp.
+                Challenge task = new Challenge();
+
+                // Przekazujemy odczytane dane do tej klasy Challenge. Jeśli true to wszystko jest OK.
+                if (task.PrepareData(_fileContent))
+                {
+                    try
+                    {
+                        // Uruchamiamy algorytm. Wszystkie wyjątki zostaną tutaj obsłużone, więc tam nie trzeba się tym martwić.
+                        Console.WriteLine($"\nSolving challenge({fileName}.txt)...");
+                        var watch = Stopwatch.StartNew();
+                        task.Solve();
+                        watch.Stop();
+                        Console.WriteLine($"Challenge solved in {GetSolvingTime(watch.ElapsedMilliseconds)}\n");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Something went wrong: {e.Message}");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+
+                // Generujemy dane do zapisu.
+                var dataToSave = task.GetSaveData();
+
+                // Zapisujemy dane do pliku
+                SaveData(fileName, dataToSave);
             }
-
-            // Generujemy dane do zapisu.
-            var dataToSave = task.GetSaveData();
-
-            // Zapisujemy dane do pliku
-            SaveData(dataToSave);
         }
 
-        static bool ReadInputData()
+        static bool ReadInputData(string fileName)
         {
-            string filePath = Path.Combine(readFilePath, $"{_fileName}.in");
+            string filePath = Path.Combine(readFilePath, $"{fileName}.txt");
 
             if(!File.Exists(filePath))
             {
@@ -93,14 +96,14 @@ namespace coding_bots
             return true;
         }
 
-        static bool SaveData(List<string> lines)
+        static bool SaveData(string fileName, List<string> lines)
         {
-            string newfileName = Path.Combine(readFilePath, writeFileDirectory, $"{_fileName}.out");
-            string archiveFileName = Path.Combine(readFilePath, writeFileDirectory, archiveFileDirectory, $"{_fileName}-{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}.out");
+            string newfileName = Path.Combine(readFilePath, writeFileDirectory, $"{fileName}.out");
+            string archiveFileName = Path.Combine(readFilePath, writeFileDirectory, archiveFileDirectory, $"{fileName}-{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}.out");
 
             if (File.Exists(newfileName))
             {
-                Console.WriteLine($"Moving an existing file \"{_fileName}.out\" to archive directory.");
+                Console.WriteLine($"Moving an existing file \"{fileName}.out\" to archive directory.");
 
                 try
                 {
@@ -144,7 +147,7 @@ namespace coding_bots
                 }
             }
 
-            var files = Directory.GetFiles(readFilePath, "*.in").Select(file => Path.GetFileNameWithoutExtension(file));
+            var files = Directory.GetFiles(readFilePath, "*.txt").Select(file => Path.GetFileNameWithoutExtension(file));
 
             if(files.Count() == 0)
             {
@@ -161,10 +164,19 @@ namespace coding_bots
                 Console.WriteLine($"Choose one of possible input files\n{parsedFiles}\n");
                 Console.Write("Choose: ");
                 choosedFile = Console.ReadLine();
-            } while (files.Contains(choosedFile) == false);
+            } while (files.Contains(choosedFile) == false && choosedFile != "all");
             
-            Console.WriteLine($"Choosed file: \"{choosedFile}.in\"\n");
-            _fileName = choosedFile;
+            if(choosedFile == "all")
+            {
+                Console.WriteLine($"Choosed files: \"{parsedFiles}\"\n");
+                _fileNames = files.ToList();
+
+            }
+            else
+            {
+                Console.WriteLine($"You have choosed all files\n");
+                _fileNames = new List<string>() { choosedFile };
+            }
 
             return true;
         }
