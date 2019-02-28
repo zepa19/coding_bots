@@ -29,6 +29,7 @@ namespace coding_bots
                 isHorizontal = true;
                 IDs = p.ID.ToString();
                 photo1 = p;
+                TAGS = p.Tags;
             }
 
             public Slide(Photo p1, Photo p2)
@@ -37,11 +38,13 @@ namespace coding_bots
                 IDs = $"{p1.ID} {p2.ID}";
                 photo1 = p1;
                 photo2 = p2;
-            }
-
-            public void SetTags(List<int> tags)
-            {
-                this.TAGS = tags;
+                TAGS = p1.Tags;
+                p2.Tags.ForEach(tag => {
+                    if(!TAGS.Contains(tag))
+                    {
+                        TAGS.Add(tag);
+                    }
+                });
             }
         }
 
