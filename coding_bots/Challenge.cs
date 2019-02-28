@@ -40,7 +40,7 @@ namespace coding_bots
                 photo2 = p2;
                 TAGS = p1.Tags;
                 p2.Tags.ForEach(tag => {
-                    if(!TAGS.Contains(tag))
+                    if (!TAGS.Contains(tag))
                     {
                         TAGS.Add(tag);
                     }
@@ -67,7 +67,7 @@ namespace coding_bots
 
                 isHorizontal = data[0] == "H";
                 int TagAmount = Int32.Parse(data[1]);
-                for (int i = 0; i < 1; i++)
+                for (int i = 0; i < TagAmount; i++)
                 {
                     if (TagsIds.ContainsKey(data[i + 2]))
                     {
@@ -134,7 +134,7 @@ namespace coding_bots
 
             while (photosH.Count() > 0 || photosV.Count() > 1)
             {
-                int bestInterestH = Int32.MinValue;
+                int bestInterestH = -2000000;
                 int bestIndexH = -1;
 
                 int maxLoops = Math.Min(1000, photosH.Count());
@@ -148,8 +148,8 @@ namespace coding_bots
                     }
                 }
 
-                int bestInterestV1 = Int32.MinValue;
-                int bestInterestV2 = Int32.MinValue;
+                int bestInterestV1 = -2000000;
+                int bestInterestV2 = -2000000;
                 int bestIndexV1 = -1;
                 int bestIndexV2 = -1;
 
@@ -221,15 +221,16 @@ namespace coding_bots
                 {
                     dif1++;
                 }
+
             }
 
             int dif2 = tags2.Count() - prod;
+            int retVal = Math.Min(dif1, Math.Min(dif2, prod));
             if (prod == 0)
             {
-                return -100000;
+                retVal -= 100000;
             }
-
-            return Math.Min(dif1, Math.Min(dif2, prod));
+            return retVal;
         }
 
         public List<string> GetSaveData()
