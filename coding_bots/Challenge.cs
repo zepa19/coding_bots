@@ -8,7 +8,8 @@ namespace coding_bots
 {
     public class Challenge
     {
-        List<Photo> photos = new List<Photo>();
+        List<Photo> photosH = new List<Photo>();
+        List<Photo> photosV = new List<Photo>();
         static Dictionary<string, int> TagsIds = new Dictionary<string, int>();
        
         class Photo
@@ -44,6 +45,13 @@ namespace coding_bots
                     }
                 }
             }
+
+            public Photo (Photo p)
+            {
+                ID = p.ID;
+                Tags = p.Tags;
+
+            }
         }
 
         public bool PrepareData(List<string> lines)
@@ -55,7 +63,15 @@ namespace coding_bots
 
             for (int i = 1; i < lines.Count()-1; i++)
             {
-                photos.Add(new Photo(lines[i]));
+                Photo newPhoto = new Photo(lines[i]);
+                if (newPhoto.isHorizontal)
+                {
+                    photosH.Add(newPhoto);
+                }
+                else
+                {
+                    photosV.Add(newPhoto);
+                }
             }
 
             return true;
@@ -63,7 +79,49 @@ namespace coding_bots
 
         public void Solve()
         {
-            // solving challenge algorithm   
+            // List<string> lastTags = new Photo(photos[0]);
+
+            //while (photos.Count() != 0)
+            //{
+            //    int bestIndex = 0;
+            //    int bestMatch = 0;
+                
+            //    for (int i = 1; i < photos.Count(); i++)
+            //    {
+            //        int currentMatch = 0;
+            //        if (bestMatch < currentMatch)
+            //        {
+            //            bestMatch = currentMatch;
+            //            bestIndex = i;
+            //        }
+            //    }
+            //}
+        }
+
+        public double CalculateInterest(List<string> tags1, List<string> tags2)
+        {
+            int dif1 = 0;
+            int dif2 = 0;
+            int prod = 0;
+            bool found = false;
+            foreach(string tag1 in tags1)
+            {
+                foreach (string tag2 in tags2)
+                {
+                    if(tag1.Equals(tag2))
+                    {
+                        found = true;
+                        dif1++;
+                        break;
+                    }
+
+                }
+                if (found)
+                {
+                    continue;
+                }
+            }
+            return 0;
         }
 
         public List<string> GetSaveData()
