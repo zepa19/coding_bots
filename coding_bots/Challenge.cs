@@ -136,7 +136,9 @@ namespace coding_bots
             {
                 int bestInterestH = -1;
                 int bestIndexH = -1;
-                for (int i = 0; i < photosH.Count(); i++)
+
+                int maxLoops = Math.Min(1000, photosH.Count());
+                for (int i = 0; i < maxLoops; i++)
                 {
                     int currentInterest = CalculateInterest(last.TAGS, photosH[i].Tags);
                     if (currentInterest > bestInterestH)
@@ -150,7 +152,9 @@ namespace coding_bots
                 int bestInterestV2 = -1;
                 int bestIndexV1 = -1;
                 int bestIndexV2 = -1;
-                for (int i = 0; i < photosV.Count(); i++)
+
+                maxLoops = Math.Min(1000, photosV.Count());
+                for (int i = 0; i < maxLoops; i++)
                 {
                     int currentInterest = CalculateInterest(last.TAGS, photosV[i].Tags);
                     if (currentInterest > bestInterestV1)
@@ -160,7 +164,7 @@ namespace coding_bots
                     }
                 }
 
-                for (int i = 0; i < photosV.Count(); i++)
+                for (int i = 0; i < maxLoops; i++)
                 {
                     if (i == bestIndexV1)
                     {
