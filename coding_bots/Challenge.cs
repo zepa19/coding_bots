@@ -126,34 +126,76 @@ namespace coding_bots
 
             slides.Add(last);
 
-            // List<string> lastTags = new Photo(photos[0]);
+            while (photosH.Count() > 0 || photosV.Count() > 1)
+            {
+                int bestInterestH = 0;
+                int bestIndexH = -1;
+                for (int i = 0; i < photosH.Count(); i++)
+                {
+                    int currentInterest = CalculateInterest(last.TAGS, photosH[i].Tags);
+                    if (currentInterest > bestInterestH)
+                    {
+                        bestInterestH = currentInterest;
+                        bestIndexH = i;
+                    }
+                }
 
-            //while (photos.Count() != 0)
-            //{
-            //    int bestIndex = 0;
-            //    int bestMatch = 0;
+                int bestInterestV1 = 0;
+                int bestInterestV2 = 0;
+                int bestIndexV1 = -1;
+                int bestIndexV2 = -1;
+                for (int i = 0; i < photosV.Count(); i++)
+                {
+                    int currentInterest = CalculateInterest(last.TAGS, photosV[i].Tags);
+                    if (currentInterest > bestInterestV1)
+                    {
+                        bestInterestV1 = currentInterest;
+                        bestIndexV1 = i;
+                    }
+                }
 
-            //    for (int i = 1; i < photos.Count(); i++)
-            //    {
-            //        int currentMatch = 0;
-            //        if (bestMatch < currentMatch)
-            //        {
-            //            bestMatch = currentMatch;
-            //            bestIndex = i;
-            //        }
-            //    }
-            //}
+                for (int i = 0; i < photosV.Count(); i++)
+                {
+                    if (i == bestIndexV1)
+                    {
+                        continue;
+                    }
+                    int currentInterest = CalculateInterest(last.TAGS, photosV[i].Tags);
+                    if (currentInterest > bestInterestV2)
+                    {
+                        bestInterestV2 = currentInterest;
+                        bestIndexV2 = i;
+                    }
+                }
+
+                double bestinterestV = (bestInterestV1 + bestInterestV2) / 2.0;
+                if (bestInterestH > bestinterestV)
+                {
+                    Slide bestSlide = new Slide(photosH[bestIndexH]);
+                    slides.Add(bestSlide);
+                    photosH.RemoveAt(bestIndexH);
+                    last = bestSlide;
+                }
+                else
+                {
+                    Slide bestSlide = new Slide(photosV[bestIndexV1], photosV[bestIndexV2]);
+                    slides.Add(bestSlide);
+                    photosV.RemoveAt(bestIndexV1);
+                    photosV.RemoveAt(bestIndexV2);
+                    last = bestSlide;
+                }
+            }
         }
 
-        public double CalculateInterest(List<string> tags1, List<string> tags2)
+        public int CalculateInterest(List<int> tags1, List<int> tags2)
         {
             int dif1 = 0;
             int prod = 0;
             bool found = false;
-            foreach (string tag1 in tags1)
+            foreach (int tag1 in tags1)
             {
                 found = false;
-                foreach (string tag2 in tags2)
+                foreach (int tag2 in tags2)
                 {
                     if (tag1.Equals(tag2))
                     {
