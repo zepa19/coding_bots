@@ -176,10 +176,7 @@ namespace coding_bots
         public List<string> GetSaveData()
         {
             List<string> savedData = new List<string>();
-            int count = 0;
-            foreach (Slide element in slides)
-                count++;
-            savedData.Add(count.ToString());
+            savedData.Add(slides.Count().ToString());
             foreach (Slide element in slides)
                 savedData.Add(element.IDs);
             return savedData;
