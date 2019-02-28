@@ -8,17 +8,19 @@ namespace coding_bots
 {
     public class Challenge
     {
-        List<Photo> photos= new List<Photo>();
-
+        List<Photo> photos = new List<Photo>();
+        static Dictionary<string, int> TagsIds = new Dictionary<string, int>();
+       
         class Photo
         {
             public static int count = 0;
+            public static int tagCount = 0;
 
             public int ID;
 
             public bool isHorizontal;
 
-            public List<string> Tags = new List<string>();
+            public List<int> Tags = new List<int>();
 
             public Photo(string line)
             {
@@ -30,11 +32,18 @@ namespace coding_bots
                 int TagAmount = Int32.Parse(data[1]);
                 for(int i = 0; i <  1; i++)
                 {
-                    Console.WriteLine(line);
-                    Tags.Add(data[i + 2]);
+                    if(TagsIds.ContainsKey(data[i+2]))
+                    {
+                        Tags.Add(TagsIds[data[i+2]]);
+                    }
+                    else
+                    {
+                        TagsIds.Add(data[i + 2], tagCount);
+                        Tags.Add(tagCount);
+                        tagCount++;
+                    }
                 }
             }
-
         }
 
         public bool PrepareData(List<string> lines)
