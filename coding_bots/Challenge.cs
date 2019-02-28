@@ -134,7 +134,7 @@ namespace coding_bots
 
             while (photosH.Count() > 0 || photosV.Count() > 1)
             {
-                int bestInterestH = 0;
+                int bestInterestH = -1;
                 int bestIndexH = -1;
                 for (int i = 0; i < photosH.Count(); i++)
                 {
@@ -146,8 +146,8 @@ namespace coding_bots
                     }
                 }
 
-                int bestInterestV1 = 0;
-                int bestInterestV2 = 0;
+                int bestInterestV1 = -1;
+                int bestInterestV2 = -1;
                 int bestIndexV1 = -1;
                 int bestIndexV2 = -1;
                 for (int i = 0; i < photosV.Count(); i++)
@@ -186,8 +186,10 @@ namespace coding_bots
                 {
                     Slide bestSlide = new Slide(photosV[bestIndexV1], photosV[bestIndexV2]);
                     slides.Add(bestSlide);
-                    photosV.RemoveAt(bestIndexV1);
-                    photosV.RemoveAt(bestIndexV2);
+                    Photo p1 = photosV[bestIndexV1];
+                    Photo p2 = photosV[bestIndexV2];
+                    photosV.Remove(p1);
+                    photosV.Remove(p2);
                     last = bestSlide;
                 }
             }
