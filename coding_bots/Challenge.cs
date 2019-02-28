@@ -21,16 +21,22 @@ namespace coding_bots
             public Photo photo2;
             public List<int> TAGS;
 
+            public Slide()
+            { }
+
             public Slide(Photo p)
             {
                 isHorizontal = true;
                 IDs = p.ID.ToString();
+                photo1 = p;
             }
 
             public Slide(Photo p1, Photo p2)
             {
                 isHorizontal = false;
                 IDs = $"{p1.ID} {p2.ID}";
+                photo1 = p1;
+                photo2 = p2;
             }
 
             public void SetTags(List<int> tags)
@@ -106,6 +112,20 @@ namespace coding_bots
 
         public void Solve()
         {
+            Slide last; 
+            if(photosH.Count() == 0)
+            {
+                last = new Slide(photosV[0], photosV[1]);
+                photosV.RemoveRange(0, 2);
+            }
+            else
+            {
+                last = new Slide(photosH[0]);
+                photosH.RemoveAt(0);
+            }
+
+            slides.Add(last);
+
             // List<string> lastTags = new Photo(photos[0]);
 
             //while (photos.Count() != 0)
@@ -128,27 +148,29 @@ namespace coding_bots
         public double CalculateInterest(List<string> tags1, List<string> tags2)
         {
             int dif1 = 0;
-            int dif2 = 0;
             int prod = 0;
             bool found = false;
             foreach(string tag1 in tags1)
             {
+                found = false;
                 foreach (string tag2 in tags2)
                 {
                     if(tag1.Equals(tag2))
                     {
                         found = true;
-                        dif1++;
+                        prod++;
                         break;
                     }
-
                 }
-                if (found)
+
+                if(!found)
                 {
-                    continue;
+                    dif1++;
                 }
             }
-            return 0;
+
+            int dif2 = tags2.Count() - prod;
+            return Math.Min(dif1, Math.Min(dif2, prod));
         }
 
         public List<string> GetSaveData()
