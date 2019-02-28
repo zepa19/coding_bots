@@ -10,7 +10,7 @@ namespace coding_bots
 {
     class Startup
     {
-        // Wszystkie pliki wejściowe odczytywane są katalogu readFilePath. Odczytywane są tylko pliki z rozszerzeniem .in
+        // Wszystkie pliki wejściowe odczytywane są katalogu readFilePath. Odczytywane są tylko pliki z rozszerzeniem .in 
         static readonly string readFilePath = "C:\\coding_bots";
 
         // Wszystkie pliki wyjściowe zapisywane są do katalogu readFilePath\writeFileDirectory. Zapisywane są z rozszerzeniem .out
