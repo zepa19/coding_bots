@@ -8,7 +8,7 @@ namespace coding_bots
 {
     public class Challenge
     {
-        List<Photo> photos;
+        List<Photo> photos= new List<Photo>();
 
         class Photo
         {
@@ -18,7 +18,7 @@ namespace coding_bots
 
             public bool isHorizontal;
 
-            public List<string> Tags;
+            public List<string> Tags = new List<string>();
 
             public Photo(string line)
             {
@@ -28,8 +28,9 @@ namespace coding_bots
 
                 isHorizontal = data[0] == "H";
                 int TagAmount = Int32.Parse(data[1]);
-                for(int i = 0; i < TagAmount; i++)
+                for(int i = 0; i <  1; i++)
                 {
+                    Console.WriteLine(line);
                     Tags.Add(data[i + 2]);
                 }
             }
@@ -43,7 +44,7 @@ namespace coding_bots
                 return false;
             }
 
-            for (int i = 1; i < lines.Count(); i++)
+            for (int i = 1; i < lines.Count()-1; i++)
             {
                 photos.Add(new Photo(lines[i]));
             }
