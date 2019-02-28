@@ -21,16 +21,22 @@ namespace coding_bots
             public Photo photo2;
             public List<int> TAGS;
 
+            public Slide()
+            { }
+
             public Slide(Photo p)
             {
                 isHorizontal = true;
                 IDs = p.ID.ToString();
+                photo1 = p;
             }
 
             public Slide(Photo p1, Photo p2)
             {
                 isHorizontal = false;
                 IDs = $"{p1.ID} {p2.ID}";
+                photo1 = p1;
+                photo2 = p2;
             }
 
             public void SetTags(List<int> tags)
@@ -38,7 +44,7 @@ namespace coding_bots
                 this.TAGS = tags;
             }
         }
-       
+
         class Photo
         {
             public static int count = 0;
@@ -58,11 +64,11 @@ namespace coding_bots
 
                 isHorizontal = data[0] == "H";
                 int TagAmount = Int32.Parse(data[1]);
-                for(int i = 0; i <  1; i++)
+                for (int i = 0; i < 1; i++)
                 {
-                    if(TagsIds.ContainsKey(data[i+2]))
+                    if (TagsIds.ContainsKey(data[i + 2]))
                     {
-                        Tags.Add(TagsIds[data[i+2]]);
+                        Tags.Add(TagsIds[data[i + 2]]);
                     }
                     else
                     {
@@ -73,7 +79,7 @@ namespace coding_bots
                 }
             }
 
-            public Photo (Photo p)
+            public Photo(Photo p)
             {
                 ID = p.ID;
                 Tags = p.Tags;
@@ -83,12 +89,12 @@ namespace coding_bots
 
         public bool PrepareData(List<string> lines)
         {
-            if(lines == null)
+            if (lines == null)
             {
                 return false;
             }
 
-            for (int i = 1; i < lines.Count()-1; i++)
+            for (int i = 1; i < lines.Count() - 1; i++)
             {
                 Photo newPhoto = new Photo(lines[i]);
                 if (newPhoto.isHorizontal)
@@ -106,13 +112,27 @@ namespace coding_bots
 
         public void Solve()
         {
+            Slide last;
+            if (photosH.Count() == 0)
+            {
+                last = new Slide(photosV[0], photosV[1]);
+                photosV.RemoveRange(0, 2);
+            }
+            else
+            {
+                last = new Slide(photosH[0]);
+                photosH.RemoveAt(0);
+            }
+
+            slides.Add(last);
+
             // List<string> lastTags = new Photo(photos[0]);
 
             //while (photos.Count() != 0)
             //{
             //    int bestIndex = 0;
             //    int bestMatch = 0;
-                
+
             //    for (int i = 1; i < photos.Count(); i++)
             //    {
             //        int currentMatch = 0;
@@ -128,27 +148,29 @@ namespace coding_bots
         public double CalculateInterest(List<string> tags1, List<string> tags2)
         {
             int dif1 = 0;
-            int dif2 = 0;
             int prod = 0;
             bool found = false;
-            foreach(string tag1 in tags1)
+            foreach (string tag1 in tags1)
             {
+                found = false;
                 foreach (string tag2 in tags2)
                 {
-                    if(tag1.Equals(tag2))
+                    if (tag1.Equals(tag2))
                     {
                         found = true;
-                        dif1++;
+                        prod++;
                         break;
                     }
-
                 }
-                if (found)
+
+                if (!found)
                 {
-                    continue;
+                    dif1++;
                 }
             }
-            return 0;
+
+            int dif2 = tags2.Count() - prod;
+            return Math.Min(dif1, Math.Min(dif2, prod));
         }
 
         public List<string> GetSaveData()
