@@ -134,7 +134,7 @@ namespace coding_bots
 
             while (photosH.Count() > 0 || photosV.Count() > 1)
             {
-                int bestInterestH = -1;
+                int bestInterestH = Int32.MinValue;
                 int bestIndexH = -1;
 
                 int maxLoops = Math.Min(1000, photosH.Count());
@@ -148,8 +148,8 @@ namespace coding_bots
                     }
                 }
 
-                int bestInterestV1 = -1;
-                int bestInterestV2 = -1;
+                int bestInterestV1 = Int32.MinValue;
+                int bestInterestV2 = Int32.MinValue;
                 int bestIndexV1 = -1;
                 int bestIndexV2 = -1;
 
@@ -224,6 +224,11 @@ namespace coding_bots
             }
 
             int dif2 = tags2.Count() - prod;
+            if (prod == 0)
+            {
+                return -100000;
+            }
+
             return Math.Min(dif1, Math.Min(dif2, prod));
         }
 
