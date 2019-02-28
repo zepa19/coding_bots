@@ -29,6 +29,7 @@ namespace coding_bots
                 isHorizontal = true;
                 IDs = p.ID.ToString();
                 photo1 = p;
+                TAGS = p.Tags;
             }
 
             public Slide(Photo p1, Photo p2)
@@ -37,11 +38,13 @@ namespace coding_bots
                 IDs = $"{p1.ID} {p2.ID}";
                 photo1 = p1;
                 photo2 = p2;
-            }
-
-            public void SetTags(List<int> tags)
-            {
-                this.TAGS = tags;
+                TAGS = p1.Tags;
+                p2.Tags.ForEach(tag => {
+                    if(!TAGS.Contains(tag))
+                    {
+                        TAGS.Add(tag);
+                    }
+                });
             }
         }
 
@@ -89,6 +92,9 @@ namespace coding_bots
 
         public bool PrepareData(List<string> lines)
         {
+            Photo.count = 0;
+            Photo.tagCount = 0;
+            Dictionary<string, int> TagsIds = new Dictionary<string, int>();
             if (lines == null)
             {
                 return false;
@@ -218,13 +224,18 @@ namespace coding_bots
         public List<string> GetSaveData()
         {
             List<string> savedData = new List<string>();
-            int count = 0;
-            foreach (Slide element in slides)
-                count++;
-            savedData.Add(count.ToString());
+            savedData.Add(slides.Count().ToString());
             foreach (Slide element in slides)
                 savedData.Add(element.IDs);
             return savedData;
+        }
+
+        static void Swap<T>(ref T lhs, ref T rhs)
+        {
+            T temp;
+            temp = lhs;
+            lhs = rhs;
+            rhs = temp;
         }
     }
 }
